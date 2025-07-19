@@ -1,0 +1,18 @@
+{
+  "name": "google-sheet-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "google-auth-library": "^10.1.0",
+    "google-spreadsheet": "^4.1.5",
+    "whatsapp-web.js": "^1.31.0"
+  }
+}
