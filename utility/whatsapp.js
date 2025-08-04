@@ -20,15 +20,22 @@ async function sendMessage(client, number, name, imagePath) {
 
     const message = `Hi ${(name && name.toLowerCase() !== "null") ? name : "Flipshoppers"},
 
-🎉 *Amazon Prime Day & Flipkart GOAT Sale are now LIVE!*
+🎉 *Flipshope's Birthday Sale is LIVE now!*
 
-🛒 Get *up to 90% OFF* on Electronics, Fashion & more!  
-💥 *Deals starting at just ₹99*  
-🎧 *iPhones, Earbuds, Smartwatches* – Everything’s on sale!  
-🔥 Don’t waste time hopping apps – find *ALL top deals* in one place on the *TBD App*.
+📱 Grab *iPhones, Earbuds, Speakers,* and more  
+💥 At just *₹10*! Yes, you read that right!
 
-👉 *Grab now:* https://app.fs9.in/tbd`;
+🛍 Don’t miss out on the craziest deals of the year.  
+🎯 *Reply with "SALE"* to participate instantly.`;
+;
+    // Simulate typing
+    const chat = await client.getChatById(number);
+    await chat.sendStateTyping(); // shows typing...
 
+    // Wait to mimic human typing time (based on message length)
+    await new Promise(resolve => setTimeout(resolve, Math.min(3000 + message.length * 20, 10000)));
+
+    await chat.clearState(); // stops typing indicator
 
     await client.sendMessage(number, media, { caption: message });
 }

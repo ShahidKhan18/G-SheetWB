@@ -1,9 +1,10 @@
+process.loadEnvFile()
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const path = require("path");
 
 const SESSION_FOLDER = "./.wwebjs_auth"; // Folder to persist session
-const logger = require("../logger");
+const logger = require("./logger");
 const {
 
     isRegistered,
@@ -11,6 +12,7 @@ const {
 
 } = require("./utility/whatsapp");
 const { removeSentUsers, loadUsers } = require("./utility/spreadsheet");
+
 
 
 async function sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize) {
@@ -43,7 +45,7 @@ async function sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize) {
                         client,
                         formattedNumber,
                         user.name,
-                        path.resolve(__dirname, "../image.png")
+                        path.resolve(__dirname, "./image.jpg")
                     );
 
                     console.log(`✅ Sent to ${user.name} at ${formattedNumber}`);
@@ -101,7 +103,10 @@ async function sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize) {
 
 
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    authStrategy: new LocalAuth({
+        clientId: 'botA',
+        dataPath: path.resolve(__dirname, SESSION_FOLDER),
+    }),
     puppeteer: {
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
     },
@@ -118,12 +123,14 @@ const client = new Client({
         console.log("✅ WhatsApp client is ready and session is persisted!");
 
         //+ Load users from user.xlxs
-        const users = loadUsers();
+        const users =await loadUsers();
         const TOTAL_TO_SEND = users?.length;
-        const batchSize = 50;
+        const batchSize = 20;
 
         console.log(`${TOTAL_TO_SEND} total messages to send`);
         console.log(`${batchSize} batch size per session`);
+
+        console.log("Total Users",users)
 
         await sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize);
     });
@@ -140,16 +147,31 @@ const client = new Client({
         console.log("⚠️ Client disconnected. Reinitializing...");
         client.initialize(); // optional reconnect logic
     });
-    client.on("message_create", (message) => {
-        const msgContext = ["hii", "hi"];
-        const userMsg = message.body.toLowerCase();
+client.on("message_create", async (message) => {
+    const msgContext = ["sale", "SALE"];
+    const userMsg = message.body.toLowerCase();
 
-        if (msgContext.includes(userMsg)) {
-            message.reply(
-                "Hi,\nI hope the above link is clickable now.\n\nBtw, did this price drop alert help you?"
-            );
-        }
-    });
+    if (msgContext.includes(userMsg)) {
+        const chat = await message.getChat(); // Get chat object for typing
+        await chat.sendStateTyping(); // Show typing indicator
+
+        // Simulate human typing delay
+        await new Promise(resolve =>
+            setTimeout(resolve, Math.min(3000 + message.body.length * 20, 10000))
+        );
+
+        await chat.clearState(); // Clear typing state
+
+        message.reply(
+            `Hi,\nI hope the above link is clickable now.\n\n🎉 *Flipshope's Birthday Sale is LIVE!*
+
+🎁 Grab *iPhones, Earbuds, Speakers* at just *₹10*!
+
+👉 Participate here: https://flipshope.onelink.me/v4X7?af_xp=app&pid=fsp_redirection&c=redirection_campaign&deep_link_value=bday_sale`
+        );
+    }
+});
+
 
     // Initialize immediately
     client.initialize();
