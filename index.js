@@ -57,6 +57,9 @@ async function sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize) {
                         time: istDate,
                     });
                     removeSentUsers(user.number);
+                    const delayMs = (Math.floor(Math.random() * 5) + 1) * 60000;
+                    console.log(`🕒 Waiting for ${delayMs / 60000} min...`);
+                    await new Promise((resolve) => setTimeout(resolve, delayMs));
                 } else {
                     console.warn(`⚠️ Number ${formattedNumber} not registered.`);
                     logger.warn({
@@ -77,10 +80,6 @@ async function sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize) {
                     time: istDate,
                 });
             }
-
-            const delayMs = (Math.floor(Math.random() * 5) + 1) * 60000;
-            console.log(`🕒 Waiting for ${delayMs / 60000} min...`);
-            await new Promise((resolve) => setTimeout(resolve, delayMs));
 
             tempMsgCount++;
         }
