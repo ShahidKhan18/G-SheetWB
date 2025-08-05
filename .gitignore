@@ -3,3 +3,6 @@ credentials.json
 node_modules
 .wwebjs_auth
 .wwebjs_cache
+error.json
+info.json
+warns.json

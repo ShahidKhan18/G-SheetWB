@@ -12,6 +12,7 @@ const {
 
 } = require("./utility/whatsapp");
 const { removeSentUsers, loadUsers } = require("./utility/spreadsheet");
+const getClientID = require("./utility/clientID");
 
 
 
@@ -101,10 +102,11 @@ async function sendMessagesInBatches(users, client, TOTAL_TO_SEND, batchSize) {
 }
 
 
+const clientId=getClientID()
 
 const client = new Client({
     authStrategy: new LocalAuth({
-        clientId: 'botA',
+        clientId: clientId,
         dataPath: path.resolve(__dirname, SESSION_FOLDER),
     }),
     puppeteer: {
@@ -125,7 +127,7 @@ const client = new Client({
         //+ Load users from user.xlxs
         const users =await loadUsers();
         const TOTAL_TO_SEND = users?.length;
-        const batchSize = 20;
+        const batchSize = 100;
 
         console.log(`${TOTAL_TO_SEND} total messages to send`);
         console.log(`${batchSize} batch size per session`);
@@ -163,7 +165,7 @@ client.on("message_create", async (message) => {
         await chat.clearState(); // Clear typing state
 
         message.reply(
-            `Hi,\nI hope the above link is clickable now.\n\n🎉 *Flipshope's Birthday Sale is LIVE!*
+            `Hi Flipshopper,\n\n🎉 *Flipshope's Birthday Sale is LIVE!*
 
 🎁 Grab *iPhones, Earbuds, Speakers* at just *₹10*!
 

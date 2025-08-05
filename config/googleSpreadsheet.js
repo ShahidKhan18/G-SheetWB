@@ -3,8 +3,8 @@ const { JWT } = require('google-auth-library');
 const creds = require('../credentials.json');
 
 
-const googleSheetConnection=()=>{
-    const SHEET_ID = process.env.GOOGLE_SHEET_ID
+const googleSheetConnection=(bot)=>{
+    const SHEET_ID = bot === "botA" ? process.env.GOOGLE_SHEET_ID_BOT_A : process.env.GOOGLE_SHEET_ID_BOT_B
     const serviceAccountAuth = new JWT({
         email: creds.client_email,
         key: creds.private_key,

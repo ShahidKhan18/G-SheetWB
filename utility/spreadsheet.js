@@ -1,9 +1,10 @@
 const { googleSheetConnection } = require("../config/googleSpreadsheet");
+const getClientID = require("./clientID");
 
 
 
 async function loadUsers() {
-    const doc = googleSheetConnection()
+    const doc = googleSheetConnection(getClientID())
     try {
         await doc.loadInfo();
         console.log(doc.title);
@@ -27,7 +28,7 @@ async function loadUsers() {
 }
 
 async function removeSentUsers(targetNumber) {
-    const doc = googleSheetConnection()
+    const doc = googleSheetConnection(getClientID())
     try {
         await doc.loadInfo();
 
